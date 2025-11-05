@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Naturellement Faye</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #6ab04c;
+            --dark-green: #4a8b3a;
+            --light-green: #badc58;
+            --accent-orange: #ff7675;
+            --text-dark: #2d3436;
+            --text-light: #636e72;
+            --soft-white: #fdfcfb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2f0d9 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* LOGIN PAGE */
+        .login-container {
+            background: white;
+            border-radius: 30px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 0.9rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(106, 176, 76, 0.1);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(106, 176, 76, 0.3);
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            display: none;
+            animation: shake 0.5s ease;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* ADMIN DASHBOARD */
+        .admin-container {
+            display: none;
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+        }
+
+        .admin-container.active {
+            display: flex;
+        }
+
+        .admin-sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, var(--text-dark), #1a1a1a);
+            padding: 2rem;
+            color: white;
+        }
+
+        .admin-logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-user {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            margin-bottom: 3rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .admin-menu {
+            list-style: none;
+        }
+
+        .admin-menu-item {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .admin-menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .admin-menu-item.active {
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+        }
+
+        .admin-menu-item i {
+            width: 20px;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255,117,117,0.2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 2rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255,117,117,0.3);
+        }
+
+        .btn-view-site {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(106, 176, 76, 0.2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-site:hover {
+            background: rgba(106, 176, 76, 0.3);
+        }
+
+        .admin-content {
+            flex: 1;
+            padding: 3rem;
+            overflow-y: auto;
+            max-height: 90vh;
+        }
+
+        .admin-header {
+            margin-bottom: 3rem;
+        }
+
+        .admin-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .card {
+            background: white;
+            border: 2px solid #f0f0f0;
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .card-title i {
+            color: var(--primary-green);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        textarea.form-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .btn-save {
+            padding: 1rem 2.5rem;
+            background: linear-gradient(135deg, var(--primary-green), var(--light-green));
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .btn-save:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(106, 176, 76, 0.3);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .popup-status {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-badge {
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .status-badge.open {
+            background: rgba(106, 176, 76, 0.1);
+            color: var(--primary-green);
+        }
+
+        .status-badge.closed {
+            background: rgba(255, 117, 117, 0.1);
+            color: #ff7675;
+        }
+
+        .status-badge.active {
+            border-color: currentColor;
+            font-weight: 700;
+        }
+
+        /* STAR ITEM STYLES */
+        .star-item {
+            background: rgba(106, 176, 76, 0.05);
+            border: 2px solid rgba(106, 176, 76, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .star-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .star-item-number {
+            font-weight: 700;
+            color: var(--primary-green);
+            font-size: 1.1rem;
+        }
+
+        .btn-delete {
+            background: rgba(255, 117, 117, 0.1);
+            color: #ff7675;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 117, 117, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .star-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 968px) {
+            .admin-container {
+                flex-direction: column;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+            }
+
+            .form-row,
+            .star-form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN CONTAINER -->
+    <div class="login-container" id="loginContainer">
+        <div class="login-header">
+            <div class="login-logo">🌱</div>
+            <h1 class="login-title">Administration</h1>
+            <p class="login-subtitle">Naturellement Faye</p>
+        </div>
+
+        <div class="error-message" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i> Identifiants incorrects
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="username">
+                    <i class="fas fa-user"></i> Nom d'utilisateur
+                </label>
+                <input type="text" id="username" class="form-input" placeholder="Entrez votre nom d'utilisateur" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">
+                    <i class="fas fa-lock"></i> Mot de passe
+                </label>
+                <input type="password" id="password" class="form-input" placeholder="Entrez votre mot de passe" required>
+            </div>
+
+            <button type="submit" class="btn-login">
+                <i class="fas fa-sign-in-alt"></i> Se connecter
+            </button>
+        </form>
+
+        <p style="margin-top: 1.5rem; text-align: center; color: var(--text-light); font-size: 0.85rem;">
+            <i class="fas fa-info-circle"></i> Identifiants par défaut: admin / admin123
+        </p>
+    </div>
+
+    <!-- ADMIN DASHBOARD -->
+    <div class="admin-container" id="adminContainer">
+        <aside class="admin-sidebar">
+            <div class="admin-logo">Naturellement Faye</div>
+            <div class="admin-user">
+                <i class="fas fa-user-circle"></i> Connecté en tant qu'administrateur
+            </div>
+
+            <ul class="admin-menu">
+                <li class="admin-menu-item active" data-section="popup">
+                    <i class="fas fa-window-restore"></i>
+                    <span>Popup d'accueil</span>
+                </li>
+                <li class="admin-menu-item" data-section="hero">
+                    <i class="fas fa-image"></i>
+                    <span>Section Hero</span>
+                </li>
+                <li class="admin-menu-item" data-section="about">
+                    <i class="fas fa-info-circle"></i>
+                    <span>À propos</span>
+                </li>
+                <li class="admin-menu-item" data-section="contact">
+                    <i class="fas fa-phone"></i>
+                    <span>Contact</span>
+                </li>
+                <li class="admin-menu-item" data-section="stars">
+                    <i class="fas fa-star"></i>
+                    <span>Stars du moment</span>
+                </li>
+            </ul>
+
+            <button class="btn-view-site" onclick="window.open('index.html', '_blank')">
+                <i class="fas fa-external-link-alt"></i> Voir le site
+            </button>
+
+            <button class="btn-logout" id="logoutBtn">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </button>
+        </aside>
+
+        <main class="admin-content">
+            <div class="admin-header">
+                <h1 class="admin-title">Panneau d'Administration</h1>
+                <p class="admin-subtitle">Gérez le contenu de votre site web - Les modifications sont synchronisées en temps réel</p>
+            </div>
+
+            <!-- POPUP SECTION -->
+            <div class="content-section active" id="section-popup">
+                <div class="success-message" id="successPopup">
+                    <i class="fas fa-check-circle"></i> Modifications enregistrées avec succès !
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-window-restore"></i>
+                        Configuration du Popup
+                    </h2>
+
+                    <div class="popup-status">
+                        <div class="status-badge open active" data-status="open">
+                            <i class="fas fa-check-circle"></i> Ouvert
+                        </div>
+                        <div class="status-badge closed" data-status="closed">
+                            <i class="fas fa-times-circle"></i> Fermé
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Titre du popup</label>
+                        <input type="text" class="form-input" id="popupTitle" value="Bienvenue chez nous !">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Message du popup</label>
+                        <textarea class="form-input" id="popupText">Découvrez nos délicieux légumes biologiques cultivés avec passion. Explorez notre ferme et nos produits exceptionnels.</textarea>
+                    </div>
+
+                    <button class="btn-save" onclick="savePopup()">
+                        <i class="fas fa-save"></i> Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+
+            <!-- HERO SECTION -->
+            <div class="content-section" id="section-hero">
+                <div class="success-message" id="successHero">
+                    <i class="fas fa-check-circle"></i> Modifications enregistrées avec succès !
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-image"></i>
+                        Section Hero
+                    </h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Titre principal</label>
+                        <input type="text" class="form-input" id="heroTitle" value="Naturellement Faye">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-input" id="heroDescription">Des légumes frais, biologiques et locaux cultivés avec passion dans le respect de la nature.</textarea>
+                    </div>
+
+                    <button class="btn-save" onclick="saveHero()">
+                        <i class="fas fa-save"></i> Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+
+            <!-- ABOUT SECTION -->
+            <div class="content-section" id="section-about">
+                <div class="success-message" id="successAbout">
+                    <i class="fas fa-check-circle"></i> Modifications enregistrées avec succès !
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-info-circle"></i>
+                        Section À Propos
+                    </h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Titre de la section</label>
+                        <input type="text" class="form-input" id="aboutTitle" value="Notre Histoire">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Paragraphe 1</label>
+                        <textarea class="form-input" id="aboutPara1">Bienvenue chez Naturellement Faye, nous sommes Anne-Laure et Mathieu paysans passionnés par la culture de légumes biologiques.</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Paragraphe 2</label>
+                        <textarea class="form-input" id="aboutPara2">Notre philosophie est simple : cultiver en harmonie avec la nature, sans produits chimiques, en favorisant la biodiversité.</textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Paragraphe 3</label>
+                        <textarea class="form-input" id="aboutPara3">Nous privilégions les variétés anciennes et locales pour vous offrir une expérience gustative authentique.</textarea>
+                    </div>
+
+                    <button class="btn-save" onclick="saveAbout()">
+                        <i class="fas fa-save"></i> Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTACT SECTION -->
+            <div class="content-section" id="section-contact">
+                <div class="success-message" id="successContact">
+                    <i class="fas fa-check-circle"></i> Modifications enregistrées avec succès !
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-phone"></i>
+                        Informations de Contact
+                    </h2>
+
+                    <div class="form-group">
+                        <label class="form-label">Adresse</label>
+                        <textarea class="form-input" id="contactAddress">Rue du Clos des Mailles
+49380 Faye-d'Anjou, France</textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Téléphone</label>
+                            <input type="tel" class="form-input" id="contactPhone" value="+33 6 31 29 84 71">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Email (optionnel)</label>
+                            <input type="email" class="form-input" id="contactEmail" placeholder="contact@naturellementfaye.fr">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Horaires d'ouverture</label>
+                        <textarea class="form-input" id="contactHours">Mercredi : 15h30 - 19h00
+Samedi : 9h00 - 12h30</textarea>
+                    </div>
+
+                    <button class="btn-save" onclick="saveContact()">
+                        <i class="fas fa-save"></i> Enregistrer les modifications
+                    </button>
+                </div>
+            </div>
+
+            <!-- STARS SECTION -->
+            <div class="content-section" id="section-stars">
+                <div class="success-message" id="successStars">
+                    <i class="fas fa-check-circle"></i> Modifications enregistrées avec succès !
+                </div>
+
+                <div class="card">
+                    <h2 class="card-title">
+                        <i class="fas fa-star"></i>
+                        Stars du Moment
+                    </h2>
+                    <p style="color: var(--text-light); margin-bottom: 2rem;">
+                        Gérez vos légumes vedettes qui seront mis en avant sur le site. Les images doivent être uploadées dans le même dossier que le site.
+                    </p>
+
+                    <div id="starsList"></div>
+
+                    <button class="btn-save" onclick="addStar()" style="background: rgba(106, 176, 76, 0.2); color: var(--primary-green); margin-top: 1rem;">
+                        <i class="fas fa-plus"></i> Ajouter une star
+                    </button>
+
+                    <button class="btn-save" onclick="saveStars()" style="margin-top: 1rem; margin-left: 1rem;">
+                        <i class="fas fa-save"></i> Enregistrer toutes les modifications
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // STORAGE MANAGEMENT
+        const STORAGE_KEYS = {
+            POPUP: 'admin_popup_data',
+            HERO: 'admin_hero_data',
+            ABOUT: 'admin_about_data',
+            CONTACT: 'admin_contact_data',
+            STARS: 'admin_stars_data'
+        };
+
+        // Load data from storage on page load
+        async function loadAllData() {
+            try {
+                // Load popup data
+                const popupData = await window.storage.get(STORAGE_KEYS.POPUP);
+                if (popupData) {
+                    const data = JSON.parse(popupData.value);
+                    document.getElementById('popupTitle').value = data.title || '';
+                    document.getElementById('popupText').value = data.text || '';
+                    
+                    document.querySelectorAll('.status-badge').forEach(badge => {
+                        badge.classList.remove('active');
+                        if (badge.dataset.status === data.status) {
+                            badge.classList.add('active');
+                        }
+                    });
+                }
+
+                // Load hero data
+                const heroData = await window.storage.get(STORAGE_KEYS.HERO);
+                if (heroData) {
+                    const data = JSON.parse(heroData.value);
+                    document.getElementById('heroTitle').value = data.title || '';
+                    document.getElementById('heroDescription').value = data.description || '';
+                }
+
+                // Load about data
+                const aboutData = await window.storage.get(STORAGE_KEYS.ABOUT);
+                if (aboutData) {
+                    const data = JSON.parse(aboutData.value);
+                    document.getElementById('aboutTitle').value = data.title || '';
+                    document.getElementById('aboutPara1').value = data.paragraph1 || '';
+                    document.getElementById('aboutPara2').value = data.paragraph2 || '';
+                    document.getElementById('aboutPara3').value = data.paragraph3 || '';
+                }
+
+                // Load contact data
+                const contactData = await window.storage.get(STORAGE_KEYS.CONTACT);
+                if (contactData) {
+                    const data = JSON.parse(contactData.value);
+                    document.getElementById('contactAddress').value = data.address || '';
+                    document.getElementById('contactPhone').value = data.phone || '';
+                    document.getElementById('contactEmail').value = data.email || '';
+                    document.getElementById('contactHours').value = data.hours || '';
+                }
+
+                // Load stars data
+                await loadStars();
+            } catch (error) {
+                console.log('No saved data found, using defaults');
+            }
+        }
+
+        // AUTHENTICATION
+        const ADMIN_CREDENTIALS = {
+            username: 'admin',
+            password: 'admin123'
+        };
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('errorMessage');
+
+            if (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('adminContainer').classList.add('active');
+                errorMsg.classList.remove('show');
+                loadAllData();
+            } else {
+                errorMsg.classList.add('show');
+                setTimeout(() => errorMsg.classList.remove('show'), 3000);
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            document.getElementById('adminContainer').classList.remove('active');
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        });
+
+        // NAVIGATION
+        document.querySelectorAll('.admin-menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelector('.admin-menu-item.active').classList.remove('active');
+                this.classList.add('active');
+
+                const section = this.dataset.section;
+                document.querySelectorAll('.content-section').forEach(sec => {
+                    sec.classList.remove('active');
+                });
+                document.getElementById(`section-${section}`).classList.add('active');
+            });
+        });
+
+        // POPUP STATUS
+        document.querySelectorAll('.status-badge').forEach(badge => {
+            badge.addEventListener('click', function() {
+                document.querySelector('.status-badge.active').classList.remove('active');
+                this.classList.add('active');
+
+                const status = this.dataset.status;
+                if (status === 'closed') {
+                    document.getElementById('popupTitle').value = 'Nous sommes FERMÉ';
+                    document.getElementById('popupText').value = 'Nous sommes fermé du 20 octobre au 3 novembre.';
+                } else {
+                    document.getElementById('popupTitle').value = 'Bienvenue chez nous !';
+                    document.getElementById('popupText').value = 'Découvrez nos délicieux légumes biologiques cultivés avec passion. Explorez notre ferme et nos produits exceptionnels.';
+                }
+            });
+        });
+
+        // SAVE FUNCTIONS
+        function showSuccess(elementId) {
+            const elem = document.getElementById(elementId);
+            elem.classList.add('show');
+            setTimeout(() => elem.classList.remove('show'), 3000);
+        }
+
+        async function savePopup() {
+            const data = {
+                title: document.getElementById('popupTitle').value,
+                text: document.getElementById('popupText').value,
+                status: document.querySelector('.status-badge.active').dataset.status
+            };
+            
+            try {
+                await window.storage.set(STORAGE_KEYS.POPUP, JSON.stringify(data));
+                console.log('Popup data saved:', data);
+                showSuccess('successPopup');
+            } catch (error) {
+                console.error('Error saving popup data:', error);
+                alert('Erreur lors de l\'enregistrement');
+            }
+        }
+
+        async function saveHero() {
+            const data = {
+                title: document.getElementById('heroTitle').value,
+                description: document.getElementById('heroDescription').value
+            };
+            
+            try {
+                await window.storage.set(STORAGE_KEYS.HERO, JSON.stringify(data));
+                console.log('Hero data saved:', data);
+                showSuccess('successHero');
+            } catch (error) {
+                console.error('Error saving hero data:', error);
+                alert('Erreur lors de l\'enregistrement');
+            }
+        }
+
+        async function saveAbout() {
+            const data = {
+                title: document.getElementById('aboutTitle').value,
+                paragraph1: document.getElementById('aboutPara1').value,
+                paragraph2: document.getElementById('aboutPara2').value,
+                paragraph3: document.getElementById('aboutPara3').value
+            };
+            
+            try {
+                await window.storage.set(STORAGE_KEYS.ABOUT, JSON.stringify(data));
+                console.log('About data saved:', data);
+                showSuccess('successAbout');
+            } catch (error) {
+                console.error('Error saving about data:', error);
+                alert('Erreur lors de l\'enregistrement');
+            }
+        }
+
+        async function saveContact() {
+            const data = {
+                address: document.getElementById('contactAddress').value,
+                phone: document.getElementById('contactPhone').value,
+                email: document.getElementById('contactEmail').value,
+                hours: document.getElementById('contactHours').value
+            };
+            
+            try {
+                await window.storage.set(STORAGE_KEYS.CONTACT, JSON.stringify(data));
+                console.log('Contact data saved:', data);
+                showSuccess('successContact');
+            } catch (error) {
+                console.error('Error saving contact data:', error);
+                alert('Erreur lors de l\'enregistrement');
+            }
+        }
+
+        // STARS MANAGEMENT
+        let starsData = [];
+
+        async function loadStars() {
+            try {
+                const result = await window.storage.get(STORAGE_KEYS.STARS);
+                if (result) {
+                    starsData = JSON.parse(result.value);
+                } else {
+                    starsData = [
+                        { name: 'Courges', description: 'Une diversité de variétés pour plus de saveurs', season: 'Automne/Hiver', image: 'IMG_0752.jpg' },
+                        { name: 'Betteraves', description: 'Récoltés au petit matin pour plus de fraîcheur', season: 'Toute l\'année', image: 'IMG_1469.JPG' },
+                        { name: 'Blettes', description: 'Deux légumes à la fois, des côtes croquantes et des feuilles savoureuses', season: 'Printemps/Été', image: 'IMG_4499.jpeg' }
+                    ];
+                }
+                renderStars();
+            } catch (error) {
+                console.log('No stars data found, using defaults');
+                starsData = [
+                    { name: 'Courges', description: 'Une diversité de variétés pour plus de saveurs', season: 'Automne/Hiver', image: 'IMG_0752.jpg' },
+                    { name: 'Betteraves', description: 'Récoltés au petit matin pour plus de fraîcheur', season: 'Toute l\'année', image: 'IMG_1469.JPG' },
+                    { name: 'Blettes', description: 'Deux légumes à la fois, des côtes croquantes et des feuilles savoureuses', season: 'Printemps/Été', image: 'IMG_4499.jpeg' }
+                ];
+                renderStars();
+            }
+        }
+
+        function renderStars() {
+            const container = document.getElementById('starsList');
+            container.innerHTML = '';
+
+            starsData.forEach((star, index) => {
+                const starItem = document.createElement('div');
+                starItem.className = 'star-item';
+                starItem.innerHTML = `
+                    <div class="star-item-header">
+                        <span class="star-item-number">
+                            <i class="fas fa-star"></i> Star #${index + 1}
+                        </span>
+                        <button class="btn-delete" onclick="deleteStar(${index})">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </button>
+                    </div>
+                    <div class="star-form-row">
+                        <div class="form-group">
+                            <label class="form-label">Nom du légume</label>
+                            <input type="text" class="form-input" value="${star.name}" 
+                                onchange="updateStar(${index}, 'name', this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Saison</label>
+                            <input type="text" class="form-input" value="${star.season}" 
+                                onchange="updateStar(${index}, 'season', this.value)">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-input" 
+                            onchange="updateStar(${index}, 'description', this.value)">${star.description}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Nom du fichier image (ex: IMG_0752.jpg)</label>
+                        <input type="text" class="form-input" value="${star.image}" 
+                            onchange="updateStar(${index}, 'image', this.value)"
+                            placeholder="IMG_0752.jpg">
+                        <small style="color: var(--text-light); font-size: 0.85rem; display: block; margin-top: 0.5rem;">
+                            <i class="fas fa-info-circle"></i> L'image doit être dans le même dossier que le site
+                        </small>
+                    </div>
+                `;
+                container.appendChild(starItem);
+            });
+        }
+
+        function addStar() {
+            starsData.push({
+                name: 'Nouveau légume',
+                description: 'Description du légume',
+                season: 'Toute l\'année',
+                image: 'IMG_0752.jpg'
+            });
+            renderStars();
+        }
+
+        function deleteStar(index) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette star ?')) {
+                starsData.splice(index, 1);
+                renderStars();
+            }
+        }
+
+        function updateStar(index, field, value) {
+            starsData[index][field] = value;
+        }
+
+        async function saveStars() {
+            try {
+                await window.storage.set(STORAGE_KEYS.STARS, JSON.stringify(starsData));
+                console.log('Stars data saved:', starsData);
+                showSuccess('successStars');
+            } catch (error) {
+                console.error('Error saving stars data:', error);
+                alert('Erreur lors de l\'enregistrement');
+            }
+        }
+    </script>
+</body>
+</html>
