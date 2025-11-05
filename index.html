@@ -125,11 +125,6 @@
             box-shadow: 0 15px 30px rgba(106, 176, 76, 0.3);
         }
 
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
         .error-message {
             background: #fee;
             color: #c33;
@@ -234,6 +229,23 @@
 
         .btn-logout:hover {
             background: rgba(255,117,117,0.3);
+        }
+
+        .btn-view-site {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(106, 176, 76, 0.2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-site:hover {
+            background: rgba(106, 176, 76, 0.3);
         }
 
         .admin-content {
@@ -385,20 +397,6 @@
             font-weight: 700;
         }
 
-        @media (max-width: 968px) {
-            .admin-container {
-                flex-direction: column;
-            }
-
-            .admin-sidebar {
-                width: 100%;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
         /* STAR ITEM STYLES */
         .star-item {
             background: rgba(106, 176, 76, 0.05);
@@ -445,7 +443,16 @@
             margin-bottom: 1rem;
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 968px) {
+            .admin-container {
+                flex-direction: column;
+            }
+
+            .admin-sidebar {
+                width: 100%;
+            }
+
+            .form-row,
             .star-form-row {
                 grid-template-columns: 1fr;
             }
@@ -521,6 +528,10 @@
                 </li>
             </ul>
 
+            <button class="btn-view-site" onclick="window.open('index.html', '_blank')">
+                <i class="fas fa-external-link-alt"></i> Voir le site
+            </button>
+
             <button class="btn-logout" id="logoutBtn">
                 <i class="fas fa-sign-out-alt"></i> Déconnexion
             </button>
@@ -529,7 +540,7 @@
         <main class="admin-content">
             <div class="admin-header">
                 <h1 class="admin-title">Panneau d'Administration</h1>
-                <p class="admin-subtitle">Gérez le contenu de votre site web</p>
+                <p class="admin-subtitle">Gérez le contenu de votre site web - Les modifications sont synchronisées en temps réel</p>
             </div>
 
             <!-- POPUP SECTION -->
@@ -616,7 +627,7 @@
 
                     <div class="form-group">
                         <label class="form-label">Paragraphe 1</label>
-                        <textarea class="form-input" id="aboutPara1">Bienvenue chez Naturellement Faye, nous somme Anne-Laure et Mathieu paysans passionné par la culture de légumes biologiques.</textarea>
+                        <textarea class="form-input" id="aboutPara1">Bienvenue chez Naturellement Faye, nous sommes Anne-Laure et Mathieu paysans passionnés par la culture de légumes biologiques.</textarea>
                     </div>
 
                     <div class="form-group">
@@ -689,7 +700,7 @@ Samedi : 9h00 - 12h30</textarea>
                         Stars du Moment
                     </h2>
                     <p style="color: var(--text-light); margin-bottom: 2rem;">
-                        Gérez vos légumes vedettes qui seront mis en avant sur le site.
+                        Gérez vos légumes vedettes qui seront mis en avant sur le site. Les images doivent être uploadées dans le même dossier que le site.
                     </p>
 
                     <div id="starsList"></div>
@@ -726,7 +737,6 @@ Samedi : 9h00 - 12h30</textarea>
                     document.getElementById('popupTitle').value = data.title || '';
                     document.getElementById('popupText').value = data.text || '';
                     
-                    // Update status badges
                     document.querySelectorAll('.status-badge').forEach(badge => {
                         badge.classList.remove('active');
                         if (badge.dataset.status === data.status) {
@@ -787,7 +797,6 @@ Samedi : 9h00 - 12h30</textarea>
                 document.getElementById('loginContainer').style.display = 'none';
                 document.getElementById('adminContainer').classList.add('active');
                 errorMsg.classList.remove('show');
-                // Load saved data after login
                 loadAllData();
             } else {
                 errorMsg.classList.add('show');
@@ -919,16 +928,18 @@ Samedi : 9h00 - 12h30</textarea>
                     starsData = JSON.parse(result.value);
                 } else {
                     starsData = [
-                        { name: 'Courges', description: 'Une diversité de variétés pour plus de saveurs', season: 'Automne/Hiver' },
-                        { name: 'Betteraves', description: 'Récoltés au petit matin pour plus de fraîcheur', season: 'Toute l\'année' }
+                        { name: 'Courges', description: 'Une diversité de variétés pour plus de saveurs', season: 'Automne/Hiver', image: 'IMG_0752.jpg' },
+                        { name: 'Betteraves', description: 'Récoltés au petit matin pour plus de fraîcheur', season: 'Toute l\'année', image: 'IMG_1469.JPG' },
+                        { name: 'Blettes', description: 'Deux légumes à la fois, des côtes croquantes et des feuilles savoureuses', season: 'Printemps/Été', image: 'IMG_4499.jpeg' }
                     ];
                 }
                 renderStars();
             } catch (error) {
                 console.log('No stars data found, using defaults');
                 starsData = [
-                    { name: 'Courges', description: 'Une diversité de variétés pour plus de saveurs', season: 'Automne/Hiver' },
-                    { name: 'Betteraves', description: 'Récoltés au petit matin pour plus de fraîcheur', season: 'Toute l\'année' }
+                    { name: 'Courges', description: 'Une diversité de variétés pour plus de saveurs', season: 'Automne/Hiver', image: 'IMG_0752.jpg' },
+                    { name: 'Betteraves', description: 'Récoltés au petit matin pour plus de fraîcheur', season: 'Toute l\'année', image: 'IMG_1469.JPG' },
+                    { name: 'Blettes', description: 'Deux légumes à la fois, des côtes croquantes et des feuilles savoureuses', season: 'Printemps/Été', image: 'IMG_4499.jpeg' }
                 ];
                 renderStars();
             }
@@ -967,6 +978,15 @@ Samedi : 9h00 - 12h30</textarea>
                         <textarea class="form-input" 
                             onchange="updateStar(${index}, 'description', this.value)">${star.description}</textarea>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">Nom du fichier image (ex: IMG_0752.jpg)</label>
+                        <input type="text" class="form-input" value="${star.image}" 
+                            onchange="updateStar(${index}, 'image', this.value)"
+                            placeholder="IMG_0752.jpg">
+                        <small style="color: var(--text-light); font-size: 0.85rem; display: block; margin-top: 0.5rem;">
+                            <i class="fas fa-info-circle"></i> L'image doit être dans le même dossier que le site
+                        </small>
+                    </div>
                 `;
                 container.appendChild(starItem);
             });
@@ -976,7 +996,8 @@ Samedi : 9h00 - 12h30</textarea>
             starsData.push({
                 name: 'Nouveau légume',
                 description: 'Description du légume',
-                season: 'Toute l\'année'
+                season: 'Toute l\'année',
+                image: 'IMG_0752.jpg'
             });
             renderStars();
         }
